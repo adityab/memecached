@@ -10,13 +10,20 @@
 <link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/40496552/bootstrap.css"/>
 
 <style>
+a:hover { cursor: pointer; }
+canvas:hover { cursor: pointer; }
+#github {
+    top: 3px;
+    right: 10px;
+    position: absolute;
+}
 </style>
 
 <script>
 
 currentMeme = "";
-width = 250;
-height = 250;
+width = 240;
+height = 240;
 
 availableMemes = {
     "bear-grylls.jpg": "Bear Grylls",
@@ -25,14 +32,14 @@ availableMemes = {
     "downvoting-roman.jpg": "Downvoting Roman",
     "forever-alone.jpg": "Forever Alone",
     "foul-bachelor-frog.jpg": "Foul Bachelor Frog",
-    "high-expectations-asian-father.jpg": "High Expectations Asian Father",
     "insanity-wolf.jpg": "Insanity Wolf",
+    "high-expectations-asian-father.jpg": "High Expectations Asian Father",
     "lame-pun-coon.jpg": "Lame Pun Racoon",
     "pedobear.jpg": "Pedo Bear",
     "philosoraptor.jpg": "Philosoraptor",
     "success-kid.jpg": "Success Kid",
-    "the-most-interesting-man-in-the-world.jpg": "The Most Interesting Man in the World",
     "x-all-the-y.jpg": "X all the Y!",
+    "the-most-interesting-man-in-the-world.jpg": "The Most Interesting Man in the World",
     "y-u-no.jpeg": "Y U NO Guy"
 };
 
@@ -50,6 +57,15 @@ $(document).ready(function(){
         clearMemes();
         currentMeme = name;
         now.getRecent(name);
+        if(name) {
+            $("#current-meme").html(availableMemes[name]);
+            $("#editor").show();
+            $("#edit-info").hide();
+        }
+        else {
+            $("#edit-info").show();
+            $("#editor").hide();
+        }
     }
 
     populateMemePicker = function() {
@@ -64,7 +80,11 @@ $(document).ready(function(){
     }
 
     makeCanvas = function(doc) {
-        return ("<li class = 'thumbnail'> <canvas width = '250' height = '250' style='padding: 10px;' id='" + doc._id + "'></canvas></li>");
+        return ("<canvas class = 'well' rel = 'twipsy' data-original-title = '" + availableMemes[doc.name] + "' onclick = pickMeme('" + doc.name + "') width = '" + width + "' height = '" + height + "' style='padding: 10px;' id='" + doc._id + "'></canvas>");
+        
+        $(function() {
+            $("canvas[rel=twipsy]").twipsy( { live: true } );
+        });
     }
     
     drawText = function(context, pos, text) {
@@ -79,7 +99,7 @@ $(document).ready(function(){
        
         var y;
         if(pos == "top")
-            y = fontSize;
+            y = fontSize + 15;
         else if(pos == "bottom") {
             y = height - 15;
         }
@@ -91,6 +111,7 @@ $(document).ready(function(){
     updateList = function(doc, where) {
         if(where == "top")
             $("#meme-list").prepend(makeCanvas(doc));
+
         $("#meme-list").append(makeCanvas(doc));
         var canvas = document.getElementById(doc._id);
         var context = canvas.getContext("2d");
@@ -115,6 +136,10 @@ $(document).ready(function(){
     now.receiveMeme = function(doc) {
         updateList(doc, "top");
     }
+    
+    $("#showall-button").click(function() {
+        pickMeme();
+    });
 
     $("#publish-button").click(function(){
         var meme = {
@@ -133,7 +158,7 @@ $(document).ready(function(){
     
     now.ready( function() {
         populateMemePicker();
-        now.getRecent();
+        pickMeme();
     });
 });
 
@@ -147,14 +172,24 @@ $(document).ready(function(){
         <small>because memes must be realtime.</small>
     </a>
 </h1>
+
+<div id = "github">
+    <a href = "https://github.com/adityab/memecached" class = "alert-message warning">fork on <strong>github</strong></a>
+</div>
+
 <div class='container-fluid'>
     <div class = 'sidebar'>
         <ul class = "media-grid" id = "meme-picker">
         </ul>
-        <div>
+        <div id = "edit-info" align = "center">
+            <h2> Click on a meme to start publishing! </h2>
+        </div>
+        <div id = "editor" align = "center">
+            <input type="button" class = "btn success" value="Show All" id="showall-button">
+            <h2 id = "current-meme"> </h2>
             <input type="text" id="text-input1" style="text-transform: uppercase;">
             <input type="text" id="text-input2" style="text-transform: uppercase;">
-            <input type="button" value="Publish" id="publish-button">
+            <input type="button" class ="btn primary" value="Publish" id="publish-button">
         </div>
     </div>
 
