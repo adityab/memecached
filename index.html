@@ -3,7 +3,7 @@
 <head>
 <title>Memecached - Open Source Meme Generator</title>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="/nowjs/now.js"></script>
 <script src="http://dl.dropbox.com/u/40496552/bootstrap-twipsy.js"></script>
 
@@ -70,6 +70,8 @@ $(document).ready(function(){
     }
 
     populateMemePicker = function() {
+        $("#meme-picker").empty();
+
         for(name in availableMemes) {
             var code = "<li> <a rel = 'twipsy' data-original-title = '" + availableMemes[name] + "' onclick = pickMeme('" + name + "')> <img class = 'thumbnail' width = '48' height = '48' src = '" + getTemplateLink(name) + "'></img></a> </li>";
             $("#meme-picker").append(code);
@@ -190,8 +192,8 @@ $(document).ready(function(){
         <div id = "editor" align = "center">
             <input type="button" class = "btn success" value="Show All" id="showall-button">
             <h2 id = "current-meme"> </h2>
-            <input type="text" id="text-input1" style="text-transform: uppercase;">
-            <input type="text" id="text-input2" style="text-transform: uppercase;">
+            <input type="text" id="text-input1" placeholder = "top line" style="text-transform: uppercase;">
+            <input type="text" id="text-input2" placeholder = "bottom line" style="text-transform: uppercase;">
             <input type="button" class ="btn primary" value="Publish" id="publish-button">
         </div>
     </div>
