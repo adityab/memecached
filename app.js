@@ -22,15 +22,10 @@ var everyone = require("now").initialize(server);
 everyone.now.publish = function(meme) {
     if(meme.name && meme.text.line1 && meme.text.line2) {
         db.collection('memes', function(err, collection) {
-            doc = { 
-                "name": meme.name, 
-                "text": meme.text, 
-                "date": Date.now() 
-                };
-
-            collection.insert(doc, function(err) {
+            meme.date = Date.now();
+            collection.insert(meme, function(err) {
                 if(!err)
-                    everyone.now.receiveMeme(doc);
+                    everyone.now.receiveMeme(meme);
             });
         });
     }
