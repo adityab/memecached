@@ -12,10 +12,10 @@ server = http.createServer( function(req, res) {
         res.end();
     });
 });
-server.listen(8080);
+server.listen(80);
 
 // now.js code
-var everyone = require("now").initialize(server);
+var everyone = require("now").initialize(server, {socketio: {'transports': ['xhr-polling']}});
 
 // publish meme
 everyone.now.publish = function(meme) {
