@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Memecached</title>
+<title>Memecached - Open Source Meme Generator</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script src="/nowjs/now.js"></script>
 <link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/40496552/bootstrap.css"/>
 
 <style>
-.resized {
-    height: 300px;
-    width: 300px;
-    padding: 10px 10px;
-}
 </style>
 
 <script>
 
-memeName = "Y U NO Guy";
-width = 300;
-height = 300;
+memeName = "bear-grylls.jpg";
+width = 250;
+height = 250;
 
 availableMemes = {
     "bear-grylls.jpg": "Bear Grylls",
@@ -39,10 +34,30 @@ availableMemes = {
     "y-u-no.jpeg": "Y U NO Guy"
 };
 
+getTemplateLink = function(filename) {
+    return  "http://dl.dropbox.com/u/40496552/memes/" + filename;
+}
+
 $(document).ready(function(){
     
+    clearMemes = function() {
+        $("#meme-list").empty();
+    }
+    
+    getRecentMemes = function(name) {
+        clearMemes();
+        now.getRecentMemes(name);
+    }
+
+    populateMemePicker = function() {
+        for(name in availableMemes) {
+            var code = "<li> <a onclick = 'now.getRecentMemes(" + name + ");'> <img class = 'thumbnail' width = '48' height = '48' src = '" + getTemplateLink(name) + "'></img> </a> </li>";
+            $("#meme-picker").append(code);
+        }
+    }
+
     makeCanvas = function(doc) {
-        return ("<canvas class = 'resized' id = '" + doc._id + "'></canvas>");
+        return ("<li class = 'thumbnail'> <canvas width = '250' height = '250' style='padding: 10px;' id='" + doc._id + "'></canvas></li>");
     }
     
     drawText = function(context, pos, text) {
@@ -59,7 +74,7 @@ $(document).ready(function(){
         if(pos == "top")
             y = fontSize;
         else if(pos == "bottom") {
-            y = height/2 - fontSize/2;
+            y = height - 15;
         }
          
         context.strokeText(text, width/2, y);
@@ -75,10 +90,10 @@ $(document).ready(function(){
         context.textAlign = "center";
         context.fillStyle = "#fff";
         context.strokeStyle = "#000";
-        context.lineWidth = 3;
+        context.lineWidth = 6;
 
         var img = new Image();
-        img.src = "http://dl.dropbox.com/u/40496552/" + doc.name + ".jpeg";
+        img.src = getTemplateLink(doc.name);
         img.onload = function() {
             context.drawImage(img, 0, 0, canvas.width, canvas.height);
             drawText(context, "top", doc.text.line1);
@@ -110,6 +125,7 @@ $(document).ready(function(){
     });
     
     now.ready( function() {
+        populateMemePicker();
         now.getRecent();
     });
 });
@@ -117,19 +133,29 @@ $(document).ready(function(){
 </script>
 </head>
 
-<body>
+<body style = "background-color: #FFFAFF;">
 
-<h1> Memecached </h1>
+<h1 style = "margin-left: 20px;"> 
+    <a href = "/" class = "alert-message error"> memecached 
+        <small>because memes must be realtime.</small>
+    </a>
+</h1>
+<div class='container-fluid'>
+    <div class = 'sidebar'>
+        <ul class = "media-grid" id = "meme-picker">
+        </ul>
+        <div>
+            <input type="text" id="text-input1" style="text-transform: uppercase;">
+            <input type="text" id="text-input2" style="text-transform: uppercase;">
+            <input type="button" value="Publish" id="publish-button">
+        </div>
+    </div>
 
-<div>
-<input type="text" id="text-input1" style="text-transform: uppercase;">
-<input type="text" id="text-input2" style="text-transform: uppercase;">
-<input type="button" value="Publish" id="publish-button">
+    <div class = 'content'>
+        <ul class = "media-grid" id = "meme-list">
+        </ul>
+    </div>
 </div>
-
-
-<div id="meme-list"></div>
-
 
 </body>
 </html>
