@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Memecached</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script src="/nowjs/now.js"></script>
+
+<script>
+
+memeName = "Y U NO Guy";
+
+$(document).ready(function(){
+
+    updateList = function(doc) {
+        $("#meme-list").append("<br> <strong>" + doc.name + "</strong> <br> " + doc.text.line1 + "<br>" + doc.text.line2);
+    }
+
+    now.getContent = function(docs) {
+        docs.forEach(updateList);
+    }
+  
+    now.receiveMeme = function(doc) {
+        updateList(doc);
+    }
+
+    $("#publish-button").click(function(){
+        var meme = {
+            name: memeName,
+            text: {
+                line1: $("#text-input1").val(),
+                line2: $("#text-input2").val()
+            }
+        };
+
+        now.publish(meme);
+
+        $("#text-input1").val("");
+        $("#text-input2").val("");
+    });
+    
+    now.ready( function() {
+        now.getRecent();
+    });
+});
+</script>
+</head>
+
+<body>
+
+<div id="meme-list"></div>
+
+<div>
+<input type="text" id="text-input1">
+<input type="text" id="text-input2">
+<input type="button" value="Publish" id="publish-button">
+</div>
+
+</body>
+</html>

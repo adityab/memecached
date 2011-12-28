@@ -1,10 +1,17 @@
+var fs  =require('fs');
 var http = require('http');
 var mongo = require('mongodb');
 
-var db = new mongo.Db('memedb', new mongo.Server('localhost', 92277));
+var db = new mongo.Db('memedb', new mongo.Server("127.0.0.1", 27017));
+db.open();
 
 server = http.createServer( function(req, res) {
     // send the latest few database entries to client
+    fs.readFile('index.html', function(err, page) {
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(page);
+        res.end();
+    });
 });
 server.listen(8080);
 
@@ -12,12 +19,12 @@ server.listen(8080);
 var everyone = require("now").initialize(server);
 
 // publish meme
-everyone.now.publish = function(memeName, memeText) {
-    if(memeText.line1 && memeText.line2)
+everyone.now.publish = function(meme) {
+    if(meme.name && meme.text.line1 && meme.text.line2) {
         db.collection('memes', function(err, collection) {
             doc = { 
-                "name": memeName, 
-                "text": memeText, 
+                "name": meme.name, 
+                "text": meme.text, 
                 "date": Date.now() 
                 };
 
@@ -26,15 +33,23 @@ everyone.now.publish = function(memeName, memeText) {
                     everyone.now.receiveMeme(doc);
             });
         });
+    }
 };
 
 // retrieve the latest few memes of a name. If there is no name, retrieve a mixture
-everyone.now.retrieve = function(memeName) {
+everyone.now.getRecent = function(memeName) {
     var client = this;
+    console.log("retrieving");
     db.collection('memes', function(err, collection) {
-        collection.find( {"name": memeName}, { sort: [[ "date", "desc" ]], 25 }).toArray( function(err, docs) {
-            console.log("Retrieved memes named " + memeName, docs);
-            client.now.getContent(docs);
-        });
+        if(memeName == undefined) {
+            collection.find( {}, { sort: [[ "date", "desc" ]], limit: 25 }).toArray( function(err, docs) {
+                client.now.getContent(docs);
+            });
+        }
+        else {
+            collection.find( {"name": memeName}, { sort: [[ "date", "desc" ]], limit: 25 }).toArray( function(err, docs) {
+                client.now.getContent(docs);
+            });
+        }
     });
 };
