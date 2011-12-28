@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
 <title>Memecached - Open Source Meme Generator</title>
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script src="/nowjs/now.js"></script>
+<script src="http://dl.dropbox.com/u/40496552/bootstrap-twipsy.js"></script>
+
 <link rel="stylesheet" type="text/css" href="http://dl.dropbox.com/u/40496552/bootstrap.css"/>
 
 <style>
@@ -11,7 +14,7 @@
 
 <script>
 
-memeName = "bear-grylls.jpg";
+currentMeme = "";
 width = 250;
 height = 250;
 
@@ -19,7 +22,6 @@ availableMemes = {
     "bear-grylls.jpg": "Bear Grylls",
     "brace-yourselves-x-is-coming.jpg": "Brace yourselves, X is coming",
     "courage-wolf.jpg": "Courage Wolf",
-    "crazy-girlfriend-praying-mantis.jpg": "Crazy Girlfriend Praying Mantis",
     "downvoting-roman.jpg": "Downvoting Roman",
     "forever-alone.jpg": "Forever Alone",
     "foul-bachelor-frog.jpg": "Foul Bachelor Frog",
@@ -44,16 +46,21 @@ $(document).ready(function(){
         $("#meme-list").empty();
     }
     
-    getRecentMemes = function(name) {
+    pickMeme = function(name) {
         clearMemes();
-        now.getRecentMemes(name);
+        currentMeme = name;
+        now.getRecent(name);
     }
 
     populateMemePicker = function() {
         for(name in availableMemes) {
-            var code = "<li> <a onclick = 'now.getRecentMemes(" + name + ");'> <img class = 'thumbnail' width = '48' height = '48' src = '" + getTemplateLink(name) + "'></img> </a> </li>";
+            var code = "<li> <a rel = 'twipsy' data-original-title = '" + availableMemes[name] + "' onclick = pickMeme('" + name + "')> <img class = 'thumbnail' width = '48' height = '48' src = '" + getTemplateLink(name) + "'></img></a> </li>";
             $("#meme-picker").append(code);
         }
+
+        $(function() {
+            $("a[rel=twipsy]").twipsy( { live: true } );
+        });
     }
 
     makeCanvas = function(doc) {
@@ -111,7 +118,7 @@ $(document).ready(function(){
 
     $("#publish-button").click(function(){
         var meme = {
-            name: memeName,
+            name: currentMeme,
             text: {
                 line1: $("#text-input1").val().toUpperCase(),
                 line2: $("#text-input2").val().toUpperCase()
