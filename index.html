@@ -5,14 +5,34 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script src="/nowjs/now.js"></script>
 
+<style>
+.resized {
+    height: 200px;
+    width: 200px;
+    padding: 10px 10px;
+}
+
+</style>
+
 <script>
 
 memeName = "Y U NO Guy";
 
 $(document).ready(function(){
+    
+    makeCanvas = function(doc) {
+        return ("<canvas class = 'resized' id = '" + doc._id + "'></canvas>");
+    }
 
     updateList = function(doc) {
-        $("#meme-list").append("<br> <strong>" + doc.name + "</strong> <br> " + doc.text.line1 + "<br>" + doc.text.line2);
+        $("#meme-list").append(makeCanvas(doc));
+        var canvas = document.getElementById(doc._id);
+        var context = canvas.getContext("2d");
+        var img = new Image();
+        img.src = "http://dl.dropbox.com/u/40496552/" + doc.name + ".jpeg";
+        img.onload = function() {
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
     }
 
     now.getContent = function(docs) {
@@ -42,18 +62,23 @@ $(document).ready(function(){
         now.getRecent();
     });
 });
+
 </script>
 </head>
 
 <body>
 
-<div id="meme-list"></div>
+<h1> Memecached </h1>
 
 <div>
 <input type="text" id="text-input1">
 <input type="text" id="text-input2">
 <input type="button" value="Publish" id="publish-button">
 </div>
+
+
+<div id="meme-list"></div>
+
 
 </body>
 </html>
