@@ -6,7 +6,6 @@ var db = new mongo.Db('memedb', new mongo.Server("127.0.0.1", 27017));
 db.open();
 
 server = http.createServer( function(req, res) {
-    // send the latest few database entries to client
     fs.readFile('index.html', function(err, page) {
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.write(page);
@@ -22,6 +21,7 @@ var everyone = require("now").initialize(server);
 everyone.now.publish = function(meme) {
     if(meme.name && meme.text.line1 && meme.text.line2) {
         db.collection('memes', function(err, collection) {
+            // add a date field and save
             meme.date = Date.now();
             collection.insert(meme, function(err) {
                 if(!err)
