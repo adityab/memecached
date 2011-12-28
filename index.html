@@ -63,6 +63,7 @@ $(document).ready(function(){
             $("#edit-info").hide();
         }
         else {
+            currentMeme = null;
             $("#edit-info").show();
             $("#editor").hide();
         }
@@ -111,8 +112,9 @@ $(document).ready(function(){
     updateList = function(doc, where) {
         if(where == "top")
             $("#meme-list").prepend(makeCanvas(doc));
-
-        $("#meme-list").append(makeCanvas(doc));
+        else {
+            $("#meme-list").append(makeCanvas(doc));
+        }
         var canvas = document.getElementById(doc._id);
         var context = canvas.getContext("2d");
         context.textAlign = "center";
@@ -134,7 +136,8 @@ $(document).ready(function(){
     }
   
     now.receiveMeme = function(doc) {
-        updateList(doc, "top");
+        if(!currentMeme || currentMeme == doc.name)
+            updateList(doc, "top");
     }
     
     $("#showall-button").click(function() {
