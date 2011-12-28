@@ -23,7 +23,7 @@ All meme template images are stored on Dropbox.
 
 - When a client connects, the last few (25) memes are queried from the database and sent back. This can further be optimized by having an in-memory queue of the most recent memes, in addition to the database.
 
-- All meme generation is done entirely **client-side**, by drawing the text over the images using **Canvas**.
+- All meme generation is done entirely **client-side**, by drawing the text over the images using **Canvas**. The client doesn't have to download images, and the server doesn't have to handle them at all.
 
 ## How to run
 
