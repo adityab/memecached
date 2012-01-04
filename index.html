@@ -40,7 +40,28 @@ availableMemes = {
     "success-kid.jpg": "Success Kid",
     "x-all-the-y.jpg": "X all the Y!",
     "the-most-interesting-man-in-the-world.jpg": "The Most Interesting Man in the World",
-    "y-u-no.jpeg": "Y U NO Guy"
+    "y-u-no.jpeg": "Y U NO Guy",
+    "advice-god.jpg": "Advice God",
+    "annoying-facebook-girl.jpg": "Annoying Facebook Girl",
+    "business-cat.jpg": "Business Cat",
+    "butthurt-dweller.jpg": "Butthurt Dweller",
+    "depression-dog.jpg": "Depression Dog",
+    "downvoting-roman.jpg": "Downvoting Roman",
+    "dwight-schrute.jpg": "Dwight Schrute",
+    "first-world-problems.jpg": "First World Problems",
+    "futurama-fry.jpg": "Futurama Fry",
+    "good-guy-greg.jpg": "Good Guy Greg",
+    "net-noob.jpg": "Net n00b",
+    "ordinary-muslim-man.jpg": "Ordinary Muslim Man",
+    "pickup-line-panda.jpg": "Pick-up Line Panda",
+    "redditors-wife.jpg": "Redditor's wife",
+    "scumbag-girl.jpg": "Scumbag Girl",
+    "scumbag-steve.jpg": "Scumbag Steve",
+    "sheltering-suburban-mom.jpg": "Sheltering Sub-urban Mom",
+    "socially-awesome-penguin.jpg": "Socially Awesome Penguine",
+    "socially-awkward-penguin.jpg": "Socially Awkward Penguine",
+    "successful-black-man.jpg": "Successful Black Man",
+    "the-most-interesting-cat-in-the-world.jpg": "The Most Interesting cat in the World"
 };
 
 getTemplateLink = function(filename) {
@@ -73,7 +94,7 @@ $(document).ready(function(){
         $("#meme-picker").empty();
 
         for(name in availableMemes) {
-            var code = "<li> <a rel = 'twipsy' data-original-title = '" + availableMemes[name] + "' onclick = pickMeme('" + name + "')> <img class = 'thumbnail' width = '48' height = '48' src = '" + getTemplateLink(name) + "'></img></a> </li>";
+            var code = "<li> <a rel = 'twipsy' data-original-title = '" + availableMemes[name] + "' onclick = pickMeme('" + name + "')> <img class = 'thumbnail' width = '30' height = '30' src = '" + getTemplateLink(name) + "'></img></a> </li>";
             $("#meme-picker").append(code);
         }
 
@@ -187,8 +208,10 @@ $(document).ready(function(){
 
 <div class='container-fluid'>
     <div class = 'sidebar'>
-        <ul class = "media-grid" id = "meme-picker">
-        </ul>
+        <div class = "well" style = "height: 300px; overflow: auto;">
+            <ul class = "media-grid" id = "meme-picker">
+            </ul>
+        </div>
         <div id = "edit-info" align = "center">
             <h2> Click on a meme to start publishing! </h2>
         </div>
