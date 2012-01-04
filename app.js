@@ -3,7 +3,13 @@ var http = require('http');
 var mongo = require('mongodb');
 
 var db = new mongo.Db('memedb', new mongo.Server("127.0.0.1", 27017));
-db.open();
+db.open(function(err) {
+    if(err) {
+        console.log(err);
+        db.close();
+        process.exit(1);
+    }
+});
 
 server = http.createServer( function(req, res) {
     fs.readFile('index.html', function(err, page) {
